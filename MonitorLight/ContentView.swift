@@ -57,22 +57,32 @@ struct ContentView: View {
             color.opacity(brightness)
                 .ignoresSafeArea()
             if showControlPanel {
-                VStack {
-                    ColorPicker("Pick a color", selection: $color)
-                        .padding()
-                        .foregroundColor(.black)
-                    HStack {
-                        Text("Brightness")
+                ZStack(alignment: .topTrailing) {
+                    Button(action: { NSApplication.shared.terminate(nil) }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.white)
+                            .frame(width: 20, height: 20)
+                            .background(Circle().fill(Color.red))
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding([.top, .trailing], 10)
+                    VStack {
+                        ColorPicker("Pick a color", selection: $color)
+                            .padding()
                             .foregroundColor(.black)
-                        Slider(value: $brightness, in: 0...1)
-                            .accentColor(.blue)
+                        HStack {
+                            Text("Brightness")
+                                .foregroundColor(.black)
+                            Slider(value: $brightness, in: 0...1)
+                                .accentColor(.blue)
+                        }
+                        .padding()
+                        Button(isFullScreen ? "Exit Full Screen (Esc)" : "Go Full Screen") {
+                            toggleFullScreen()
+                        }
+                        .buttonStyle(BlackTextButtonStyle())
+                        .padding(.bottom, 24)
                     }
-                    .padding()
-                    Button(isFullScreen ? "Exit Full Screen (Esc)" : "Go Full Screen") {
-                        toggleFullScreen()
-                    }
-                    .buttonStyle(BlackTextButtonStyle())
-                    .padding(.bottom, 24)
                 }
                 .background(Color.white.opacity(0.8))
                 .cornerRadius(12)
