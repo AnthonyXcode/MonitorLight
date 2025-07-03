@@ -35,5 +35,21 @@ MonitorLight is a simple macOS application that turns your computer monitor into
 - Preset color options
 - Timer and fade effects
 
+## Build & Deliver with Script
+
+You can build and deliver the app from the command line:
+
+1. **Build the app:**
+   ```sh
+   xcodebuild -scheme MonitorLight -configuration Release -derivedDataPath build
+   ```
+   This will generate the `.app` bundle at `build/Build/Products/Release/MonitorLight.app`.
+
+2. **Deliver (open the build folder in Finder):**
+   ```sh
+   open build/Build/Products/Release
+   ```
+   This will open the folder containing the built app so you can run or distribute it.
+
 ## License
 MIT License 
