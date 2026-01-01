@@ -52,6 +52,9 @@ struct ContentView: View {
     @State private var isFullScreen = false
     @State private var showControlPanel = true
     @State private var hidePanelWorkItem: DispatchWorkItem?
+    @State private var isColorCycleMode = false
+    @State private var colorCycleTimer: Timer? = nil
+    @State private var colorCycleHue: Double = 0.0
     var body: some View {
         ZStack {
             color.opacity(brightness)
@@ -67,14 +70,29 @@ struct ContentView: View {
                     .buttonStyle(PlainButtonStyle())
                     .padding([.top, .trailing], 10)
                     VStack {
-                        ColorPicker("Pick a color", selection: $color)
-                            .padding()
-                            .foregroundColor(.black)
-                        HStack {
-                            Text("Brightness")
-                                .foregroundColor(.black)
-                            Slider(value: $brightness, in: 0...1)
-                                .accentColor(.blue)
+                        VStack(alignment: .leading, spacing: 0) {
+                            if !isColorCycleMode {
+                                HStack {
+                                    Text("Pick a color")
+                                        .foregroundColor(.black)
+                                    ColorPicker("", selection: $color)
+                                        .labelsHidden()
+                                }
+                                .padding(.bottom, 16)
+                            }
+                            HStack {
+                                Text("Brightness")
+                                    .foregroundColor(.black)
+                                Slider(value: $brightness, in: 0...1)
+                                    .accentColor(.blue)
+                            }
+                            HStack {
+                                Text("Color Cycle Mode")
+                                    .foregroundColor(.black)
+                                Toggle("", isOn: $isColorCycleMode)
+                                    .labelsHidden()
+                            }
+                            .padding(.top, 20)
                         }
                         .padding()
                         Button(isFullScreen ? "Exit Full Screen (Esc)" : "Go Full Screen") {
@@ -105,10 +123,20 @@ struct ContentView: View {
                 return event
             }
             resetHidePanelTimer()
+            if isColorCycleMode {
+                startColorCycle()
+            }
         }
         .onChange(of: color) { newColor in
             if let hex = newColor.toHex() {
                 colorHex = hex
+            }
+        }
+        .onChange(of: isColorCycleMode) { enabled in
+            if enabled {
+                startColorCycle()
+            } else {
+                stopColorCycle()
             }
         }
         .onChange(of: showControlPanel) { visible in
@@ -118,6 +146,18 @@ struct ContentView: View {
                 NSCursor.hide()
             }
         }
+    }
+    private func startColorCycle() {
+        stopColorCycle()
+        colorCycleTimer = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { _ in
+            colorCycleHue += 0.002
+            if colorCycleHue > 1.0 { colorCycleHue = 0.0 }
+            color = Color(hue: colorCycleHue, saturation: 1.0, brightness: 1.0)
+        }
+    }
+    private func stopColorCycle() {
+        colorCycleTimer?.invalidate()
+        colorCycleTimer = nil
     }
     private func resetHidePanelTimer() {
         showControlPanel = true

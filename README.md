@@ -9,6 +9,10 @@ MonitorLight is a simple macOS application that turns your computer monitor into
 - Exit full-screen mode with the Esc key
 - Lightweight and privacy-friendly
 
+## Demo
+
+<video src="doc/demo.mp4" controls width="100%"></video>
+
 ## Requirements
 - macOS 12 Monterey or later
 - Swift 5.7+
