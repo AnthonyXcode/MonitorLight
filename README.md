@@ -11,7 +11,9 @@ MonitorLight is a simple macOS application that turns your computer monitor into
 
 ## Demo
 
-<video src="doc/demo.mp4" controls width="100%"></video>
+[Watch the demo video](doc/demo.mp4)
+
+<video src="doc/demo.mp4" controls width="350px"></video>
 
 ## Requirements
 - macOS 12 Monterey or later
